@@ -13,8 +13,8 @@
 **Every rendered figure has been verified** against the raw rounds, independently of `stats.js` — including Net/Course Handicap, which was previously unverified. The arithmetic is sound throughout. The problems found were in what labels claimed, not what the maths did.
 
 **Membership ROI is the open area.** The ledger must wipe each 1 January (Paul, 2026-07-27) and currently does not — a season with no fees on file silently inherits the previous year's fee, round count and savings. A field for rounds played before install is specced and not built. See `JOURNAL.md` "NEXT SESSION".
-**Live URL:** https://kamloopspaul-a11y.github.io/mt-paul-scorecard/ — confirmed serving the real build 2026-08-10 (title "A Bit of Bogey", theme `#8C2E39`). The old placeholder is gone.
-**GitHub repo:** `https://github.com/kamloopspaul-a11y/mt-paul-scorecard`.
+**Live URL:** https://mtpaulapp.github.io/mt-paul-scorecard/ — moved 2026-10-24 when the repo was transferred to the `mtpaulapp` organization (Paul). The move gives Bogey its own origin: under `kamloopspaul-a11y.github.io` it shared localStorage and Cache Storage with the Golf Scores app. The old address no longer serves the app; rounds saved there on a phone stay there.
+**GitHub repo:** `https://github.com/mtpaulapp/mt-paul-scorecard` (was `kamloopspaul-a11y/mt-paul-scorecard`).
 **Local folder:** `~/Documents/Studio/Projects/ScoreCard/`.
 
 ### What's built
