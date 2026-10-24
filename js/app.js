@@ -1273,14 +1273,6 @@ function renderHole() {
   // every non-final hole.
   const nextLabel = isLastOfSession ? 'Finish' : (showBack ? 'Next' : ('Play It' + (playerName ? ' ' + playerName.split(' ')[0] : '')));
 
-  const photoNum = pad2(d.holeNum);
-  // Pass 7 (2026-07-24): Hole 2's photo alone gets a custom crop (bottom-
-  // anchored — was losing detail low in the frame at the shared class's
-  // default center position). Per Paul: a one-off inline override here,
-  // rather than changing .hole-photo's shared background-position for every
-  // hole screen (tried that first; it affected other images for the worse).
-  // Every other hole keeps the class default untouched.
-  const photoPositionStyle = d.holeNum === 2 ? 'background-position:center bottom;' : '';
 
   return `
     <div class="screen pinned-nav">
@@ -1309,7 +1301,6 @@ function renderHole() {
           ${rockerHTML('ud', 'UD', d.ud)}
           ${puttsColumnHTML(d.putts)}
         </div>
-        <div class="hole-photo" style="background-image:url('assets/${photoNum}-Hole.png');${photoPositionStyle}"></div>
       </div>
       <div class="btn-row nav-row">
         ${showBack ? '<button class="btn" id="btn-back-hole">Back</button>' : ''}
@@ -1429,161 +1420,6 @@ function renderFinalScore() {
   `;
 }
 
-// Credits for the 19th Hole roll (Paul, 2026-07-26). Data, not markup, so the
-// copy can be edited without touching layout.
-//
-// Each row is [left, right]. The two columns meet in the middle and justify
-// TOWARDS each other — left column right-aligned, right column left-aligned,
-// 20px between them. For Cast that reads "who | what"; for crew sections it
-// reads "job | who", which is the usual film-credit order.
-const CREDIT_SECTIONS = [
-  { title: 'Cast', rows: [
-    ['Dave May', 'Himself'],
-    ['Pat Morgan', 'Himself'],
-    ['Rick Kirkwood', 'Himself'],
-    ['Jack McGuire', 'Himself'],
-    ['Ray Johnson', 'Extra'],
-    ['Gary Bailey', 'Extra'],
-    ['Rob Denier', 'Extra'],
-    ['Danny Latin', 'PGA Pro'],
-    ['Donna Diner', 'Mt. Paul Catering'],
-    ['Nancy Kitchen', 'Mt. Paul Catering'],
-    ['Fiona &amp; Melissa', 'Servers'],
-    ['Brian Proshop', 'Pro Shop Manager'],
-    ['Randy', 'Assistant II'],
-    ['Brett Emsland', 'PGA'],
-    ['Poker Players', 'Merv, Kenny, Mike &amp; the Gang']
-  ]},
-  { title: 'Directed By', rows: [
-    ['Directed By', 'Divot Reilly'],
-    ['Written By', 'Par Shooter &amp; Bo Gie'],
-    ['Produced By', 'Mt. Paul Golf Course']
-  ]},
-  { title: 'Production', rows: [
-    ['Executive Producer', 'Sandy Trapp'],
-    ['Director of Photography', 'Fair Weis'],
-    ['1st Unit Cinematography', 'Chip Shott'],
-    ['2nd Unit Cinematography', 'Rusty Wedge'],
-    ['Camera Operator', 'Lou Feaux'],
-    ['Steadicam Operator', 'Green Reider'],
-    ['Focus Puller', 'Rae Kaffe']
-  ]},
-  { title: 'Electrical &amp; Grip', rows: [
-    ['Gaffer', 'Sparky McTee'],
-    ['Best Boy Electric', 'Flint Iron'],
-    ['Key Grip', 'Trap Barrows'],
-    ['Dolly Grip', 'Cartway Jenkins']
-  ]},
-  { title: 'Art Department', rows: [
-    ['Production Designer', 'Fairway Foster'],
-    ['Art Director', 'Bunker Hill'],
-    ['Set Decorator', 'Divot Lawns'],
-    ['Costume Designer', 'Plaid Weathers'],
-    ['Hair &amp; Makeup', 'Betty Birdie']
-  ]},
-  { title: 'Assistant Directors', rows: [
-    ['1st AD', 'Marker Downes'],
-    ['2nd AD', 'Yardage Booke'],
-    ['Script Supervisor', 'Handi Capp']
-  ]},
-  { title: 'Stunts', rows: [
-    ['Stunt Coordinator', 'Slice Malone'],
-    ['Stunt Doubles', 'The Shank Brothers'],
-    ['Ball Retrieval Unit', 'The Water Hazard Divers'],
-    ['Caddy Wrangler', 'Fore! Jenkins'],
-    ['Sound Mixer', 'Wesley Whiffle'],
-    ['Boom Operator', 'Rough Rider Nolan']
-  ]},
-  { title: 'Sound', rows: [
-    ['Foley Artist', 'Clint Clubface'],
-    ['Sound Effects &mdash; Ball Strike', 'Fresh Cut Fairway Studios']
-  ]},
-  { title: 'Music &amp; Post', rows: [
-    ['Music By', 'The Birdie Orchestra'],
-    ['Original Score', '&ldquo;Ballad of the 19th Hole&rdquo;'],
-    ['Editor', 'Trim N. Green'],
-    ['Colorist', 'Ivy Fairgreen'],
-    ['Visual Effects', 'Mulligan Digital'],
-    ['Greenskeeping Consultant', 'Sod Off Studios'],
-    ['Catering', 'The Clubhouse Kitchen'],
-    ['Legal Counsel', 'Rule 14-1 LLP']
-  ]},
-  { title: 'Location', rows: [
-    ['Filmed On Location', 'Mt. Paul Golf Course<br>Front &amp; Back 9'],
-    ['Cameras By', 'Titleist Vision Optics']
-  ]},
-  { title: 'Technical Credits', rows: [
-    ['Sound By', 'Fairbank Dolby Green'],
-    ['Color By', 'Augusta Technicolor'],
-    ['Filmed In', 'Bogeyvision'],
-    ['Certified', '18-Hole Regulation Runtime'],
-    ['No Divots Were Harmed', 'In The Making Of This Round'],
-    ['A Widow Nine Production', 'Paired In Post']
-  ]}
-];
-
-function creditsHTML(year) {
-  const sections = CREDIT_SECTIONS.map((sec) => {
-    const rows = sec.rows.map(([l, r]) =>
-      `<div class="credit-row"><div class="credit-l">${l}</div><div class="credit-r">${r}</div></div>`
-    ).join('');
-    return `<section class="credit-section">
-        <h2 class="credit-section-title">${sec.title}</h2>
-        ${rows}
-      </section>`;
-  }).join('');
-
-  // Closing card — centred, full width, no columns. The last thing on screen
-  // before the fade.
-  const closing = `<section class="credit-section credit-closing">
-      <p>This Round Is A Work Of Fiction</p>
-      <p>Any Resemblance To An Actual Good Score<br>Is Purely Coincidental</p>
-      <p class="credit-marks">DTS &middot; SDDS &middot; THX</p>
-      <p class="credit-copy">Mt. Paul Golf Course &copy; ${year}</p>
-    </section>`;
-
-  return sections + closing;
-}
-
-// The last beat: a title card a second after the crawl clears (Paul,
-// 2026-07-26). Drawn in HTML/CSS rather than dropped in as an image so it
-// stays crisp at any density and picks up the app's own typefaces — "cleaner,
-// like an illustration".
-//
-// The reference photo Paul supplied carried a PGA TOUR logo on the badge. That
-// is a registered trademark and is NOT reproduced here; the sign's own form (a
-// vertical QUIET over PLEASE on a bordered plate) is generic tournament
-// signage and fine to draw fresh. The badge slot carries the Mt. Paul wordmark
-// instead, which is both clear of anyone else's mark and a better joke — this
-// is a Mt. Paul spoof, not a PGA one.
-function finalCardHTML() {
-  return `
-    <div class="final-card" hidden>
-      <div class="quiet-sign">
-        <div class="quiet-sign-plate">
-          <div class="quiet-stack">
-            <span>Q</span><span>U</span><span>I</span><span>E</span><span>T</span>
-          </div>
-          <div class="quiet-please">Please</div>
-          <img class="quiet-badge" src="assets/Logos/mt_paul_logo_vector.svg" alt="" />
-        </div>
-      </div>
-      <div class="final-line">One for Jack</div>
-      <div class="final-fineprint">A Shhhaadup Production</div>
-    </div>
-  `;
-}
-
-// Credit roll speed, pixels per second. Paul wants film-credit pace — "a
-// little too fast to catch it all in one go", the Chuck Lorre vanity-card
-// joke. Walked 40 -> 95 -> 85 (2026-07-26): 40 put the roll at 92 seconds,
-// which Paul read as waiting; 95 overshot into too-quick. Tune HERE, not by
-// setting a duration: duration is derived from content
-// height at this speed, so adding or cutting credits changes how LONG the roll
-// runs and never how fast it reads. A fixed duration would silently accelerate
-// the roll every time copy was added.
-const CREDIT_ROLL_PX_PER_SEC = 85;
-
 // Paul's shot list (2026-07-26). `slot` is the card's ENTIRE time on the
 // clock, fades included — dominoes ticking the clock down, not fades stacked
 // on top of a hold. Corrected 2026-07-26: treating the shot-list number as the
@@ -1615,9 +1451,6 @@ const INTRO_NAMES = [
 // arrival; now it's purely a pause, so it can be tuned freely on feel.
 const BLACK_SCREEN_MS = 1400;
 
-// Beat of empty black between the crawl clearing and the last card.
-const FINAL_CARD_DELAY_MS = 1000;
-
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Plays one card inside a fixed slot: fade in, hold, fade out, gone — total
@@ -1641,94 +1474,31 @@ async function playCard(stage, cls, html, slot, fade) {
 }
 
 // The whole Round Saved sequence: confirmation, studio cards, cut to black,
-// three names, then the credit roll. Called once from attachHandlers().
+// three names. Called once from attachHandlers(). The credit roll and the
+// QUIET card that followed were removed 2026-10-24 (Paul, paring the app
+// down); the sequence now ends on the blank screen under the title.
 async function playSavedSequence() {
   const stage = document.querySelector('.saved-stage');
-  const scroller = document.querySelector('.saved-scroll');
-  const credits = document.querySelector('.saved-credits');
-  if (!stage || !scroller || !credits) return;
+  if (!stage) return;
 
-  // Motion sensitivity: skip the whole sequence. No cards, no roll, no fade —
-  // the credits are simply there, scrollable by hand. Checked in JS as well as
-  // CSS because animationend would otherwise never fire and the screen would
-  // sit mid-effect forever.
+  // Motion sensitivity: skip the whole sequence. With the roll gone there is
+  // nothing left to show in its place.
   const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced) {
-    scroller.hidden = false;
-    credits.classList.add('lit');
-    const card = document.querySelector('.final-card');
-    if (card) { card.hidden = false; card.classList.add('visible'); }
-    return;
-  }
-
-  // Park the credits at their start offset now, invisible, so the roll has
-  // nothing to travel before it's readable. See CREDIT_START_FROM_TOP_PX.
-  parkCredits(scroller, credits);
+  if (reduced) return;
 
   for (const card of INTRO_CARDS) {
     await playCard(stage, card.cls, card.html, card.slot, card.fade);
   }
 
-  // BLACK SCREEN. Now just a held beat — the screen has been dark since it
-  // rendered (see .saved-screen in the CSS), so there's nothing to transition.
-  // This is the pause between the studio cards and the first name.
+  // BLACK SCREEN. A held beat — the screen has been dark since it rendered
+  // (see .saved-screen in the CSS). The pause between the studio cards and
+  // the first name.
   await wait(BLACK_SCREEN_MS);
 
   for (const n of INTRO_NAMES) {
     const html = '<span class="intro-name-label">' + n.label + '</span>' + n.name;
     await playCard(stage, 'intro-name ' + n.pos, html, 1500, 300);
   }
-
-  startCreditRoll(scroller, credits);
-}
-
-// Where the first credit waits, measured from the TOP OF THE SCREEN. Converted
-// to an offset inside the scroller, which starts lower down the page than the
-// viewport does. Walked out from 160 -> 186 -> 286 (2026-07-26) on Paul's eye:
-// 160 parked the credits inside the scroller's top fade mask so the CAST
-// heading arrived washed out; 286 sits well clear of it and gives the roll a
-// beat of black under the title before the first credit.
-const CREDIT_START_FROM_TOP_PX = 286;
-
-// Positions the credits at their start offset and leaves them invisible. Runs
-// before the intro cards so the layer is already in place, frozen, while the
-// studio cards and the three names play over it.
-function parkCredits(scroller, credits) {
-  scroller.hidden = false;
-  const scrollerTop = scroller.getBoundingClientRect().top;
-  const startPx = Math.max(0, Math.round(CREDIT_START_FROM_TOP_PX - scrollerTop));
-  credits.style.setProperty('--roll-from', startPx + 'px');
-  credits.style.setProperty('--roll-to', '-' + credits.scrollHeight + 'px');
-  // Inline transform holds the parked position. A running CSS animation
-  // outranks inline styles in the cascade, so .rolling takes over cleanly
-  // from here with no jump.
-  credits.style.transform = 'translateY(' + startPx + 'px)';
-  return startPx;
-}
-
-// One pass, then gone. Duration is derived from content height at a CONSTANT
-// pixels-per-second, so editing the credits changes how LONG the roll runs and
-// never how fast it reads. A fixed duration would silently accelerate the roll
-// every time a line was added.
-function startCreditRoll(scroller, credits) {
-  const startPx = parkCredits(scroller, credits); // idempotent; also re-measures
-  const travel = startPx + credits.scrollHeight;
-  credits.style.setProperty('--roll-duration', (travel / CREDIT_ROLL_PX_PER_SEC) + 's');
-  credits.classList.add('lit'); // fade up from black as the roll begins
-  credits.addEventListener('animationend', () => {
-    // Roll's done and off the top.
-    scroller.hidden = true;
-    // A beat of empty black, then the last card. The pause is the joke's
-    // timing — arriving straight off the crawl would read as another credit.
-    setTimeout(() => {
-      const card = document.querySelector('.final-card');
-      if (!card) return;
-      card.hidden = false;
-      void card.offsetWidth; // force a frame so the fade has a start value
-      card.classList.add('visible');
-    }, FINAL_CARD_DELAY_MS);
-  }, { once: true });
-  credits.classList.add('rolling');
 }
 
 // ===================== Screen: Round Saved (2026-07-26) =====================
@@ -1759,20 +1529,12 @@ function startCreditRoll(scroller, credits) {
 // for whatever lands there.
 function renderSaved() {
   // state.savedSnapshot ({ totalScore, parTotal, playerName, date }) is captured
-  // at Save and available here if the credits ever want the round's own figures.
-  const snap = state.savedSnapshot;
-  const creditYear = new Date(snap ? snap.date : Date.now()).getFullYear();
-
+  // at Save and available here if the screen ever wants the round's own figures.
   return `
     <div class="screen saved-screen">
       ${topbarHTML()}
       <h1 class="saved-title">19th Hole</h1>
-      <div class="saved-stage">
-        <div class="saved-scroll" hidden>
-          <div class="saved-credits">${creditsHTML(creditYear)}</div>
-        </div>
-        ${finalCardHTML()}
-      </div>
+      <div class="saved-stage"></div>
     </div>
   `;
 }

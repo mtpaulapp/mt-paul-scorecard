@@ -1511,14 +1511,9 @@ body.dark-mode {
 
 /* Round Saved / 19th Hole.
 
-   Capped height with the title pinned and the credits scrolling UNDER it —
-   same structural idea as .screen.pinned-nav, mirrored top-to-bottom. Height
-   is capped (100dvh) rather than min-height so the scroll region has a real
-   box to be constrained by; with min-height the inner region has no upper
-   bound and the whole page scrolls instead, taking the title with it.
-
-   The title's background matches the page and sits above the scroller in the
-   stacking order, so credits pass behind it rather than showing through. */
+   Capped height with the title pinned and the opening cards playing in the
+   stage below it. The credit roll that used to scroll under the title was
+   removed 2026-10-24 (Paul, paring the app down). */
 /* Dark from arrival (Paul, 2026-07-26) — "a much bolder confirmation if it
    landed on a black screen". The whole screen is a cinema you walk into, not
    one the lights go down in partway through.
@@ -1564,97 +1559,8 @@ body:not(.dark-mode) .saved-screen .brand-logo {
   z-index: 2;
   background: var(--bg);
 }
-/* The roll itself. overflow:hidden, not auto — Paul: the credits play like
-   film credits, the user can't stop or scrub them. Manual scrolling is
-   restored only under prefers-reduced-motion below, where the roll is off. */
-.saved-scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-  /* Credits dissolve as they pass under the title instead of being clipped at
-     a hard edge — the roll should fade out, not stop.
-
-     28px, not 48 (2026-07-26): the credits park 32px inside this box (see
-     CREDIT_START_FROM_TOP_PX), and a 48px ramp left the first thing on screen
-     — the CAST heading — sitting at about two-thirds opacity. 28 puts the park
-     point fully clear of the ramp. The trade is a slightly quicker dissolve
-     under the title for the rest of the roll. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 28px);
-}
-.saved-credits {
-  will-change: transform;
-  /* Parked in position but invisible until the roll begins (Paul, 2026-07-26).
-     The layer sits at its start offset from the moment the screen renders, so
-     when the names finish it fades up already on screen instead of climbing
-     into view from the bottom edge — which cost about 4s of empty screen at
-     95px/s. Opacity rather than black-type-on-black: same effect, and it can't
-     desync from the background colour. */
-  opacity: 0;
-  transition: opacity 700ms ease;
-}
-.saved-credits.lit { opacity: 1; }
-
-/* Two columns meeting in the middle with a 20px gutter, each justified TOWARDS
-   the other (Paul, 2026-07-26) — the classic film-credit spine. 1fr each keeps
-   the meeting line dead centre regardless of how long any single credit is.
-
-   Deliberately plain (2026-07-26, "more conventional to the industry"): role
-   and name are the SAME family and the SAME size. A real end crawl doesn't
-   art-direct itself — the name carries weight and caps, not a display face at
-   twice the size. Bebas is reserved for the title and the intro cards. */
-.credit-section { margin-bottom: 40px; }
-.credit-section-title {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  text-align: center;
-  margin: 0 0 16px;
-}
-.credit-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 20px;
-  align-items: baseline;
-  margin-bottom: 9px;
-}
-.credit-l, .credit-r {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  line-height: 1.4;
-}
-.credit-l {
-  text-align: right;
-  font-weight: 400;
-  color: var(--ink-muted);
-}
-.credit-r {
-  text-align: left;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-/* Closing card — centred, spans the full width, no spine. */
-.credit-closing {
-  text-align: center;
-  margin-top: 56px;
-  font-family: var(--font-ui);
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--ink-muted);
-}
-.credit-closing p { margin: 0 0 16px; }
-.credit-marks { letter-spacing: 0.3em; font-weight: 600; }
-.credit-copy { font-size: 11px; letter-spacing: 0.1em; }
-
 /* ---- Opening sequence (Paul's shot list, 2026-07-26) --------------------
-   Timed cards played over the credits area before the roll starts. Absolutely
+   Timed cards played in the stage under the title. Absolutely
    positioned so each card is composed independently and nothing reflows as
    they swap. Opacity only — no movement — so they read as cuts and dissolves,
    not as UI. */
@@ -1745,132 +1651,6 @@ body:not(.dark-mode) .saved-screen .brand-logo {
 .intro-name.pos-a { top: 42%; text-align: left;   padding-left: 8%;  font-size: 40px; }
 .intro-name.pos-b { top: 48%; text-align: right;  padding-right: 6%; font-size: 37px; }
 .intro-name.pos-c { top: 45%; text-align: center;                    font-size: 37px; }
-
-/* Distance and duration are both set inline by startCreditRoll() — duration is
-   derived from content height at a CONSTANT PIXELS-PER-SECOND, so adding or
-   cutting credits changes how long the roll lasts and never how fast it reads.
-   A fixed duration would silently speed the roll up every time copy is added. */
-@keyframes credit-roll {
-  from { transform: translateY(var(--roll-from)); }
-  to   { transform: translateY(var(--roll-to)); }
-}
-.saved-credits.rolling {
-  animation: credit-roll var(--roll-duration) linear forwards;
-}
-
-/* Motion sensitivity: no roll. The credits become a normal scrollable list and
-   the screen never fades. WCAG 2.2.2 (Pause, Stop, Hide) is about motion the
-   user can't control, which is precisely what this is by design — so the
-   carve-out happens here rather than by adding a pause control that would
-   break the effect for everyone else. */
-@media (prefers-reduced-motion: reduce) {
-  .saved-scroll { overflow-y: auto; }
-  .saved-credits.rolling { animation: none; transform: none; }
-  .saved-screen { transition: none; }
-}
-
-/* ---- 19th Hole: final card (2026-07-26) ---------------------------------
-   Plays a second after the crawl clears and stays. Drawn, not photographed —
-   an <img> of the reference sign would soften on a retina screen and wouldn't
-   share the app's type. */
-.final-card {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 1200ms ease;
-}
-.final-card.visible { opacity: 1; }
-
-/* Sits BELOW the sign (Paul, 2026-07-26), 60px clear of it — the sign reads
-   first, the line lands as the caption. */
-.final-line {
-  font-family: var(--font-marquee);
-  font-size: 40px;
-  line-height: 1;
-  margin-top: 60px;
-  text-align: center;
-}
-
-/* The sign. Proportions follow the reference plate: tall, narrow, a blue rule
-   inset from a cream field, rounded corners. */
-.quiet-sign {
-  --sign-navy: #1F3D7A;
-  --sign-field: #F7F3E8;
-  margin-top: 4%;
-  flex: 0 1 auto;
-  min-height: 0;
-  display: flex;
-  justify-content: center;
-}
-.quiet-sign-plate {
-  width: 128px;
-  height: 100%;
-  max-height: 400px;
-  background: var(--sign-field);
-  border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.45);
-  padding: 12px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* The inner rule is a second border drawn with an inset shadow rather than a
-     nested element — keeps the markup to one box and the corners concentric. */
-  box-shadow: 0 6px 18px rgba(0,0,0,.45),
-              inset 0 0 0 3px var(--sign-field),
-              inset 0 0 0 6px var(--sign-navy);
-}
-.quiet-stack {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  padding-top: 6px;
-}
-.quiet-stack span {
-  font-family: var(--font-ui);
-  font-weight: 800;
-  font-size: 42px;
-  line-height: .84;
-  color: var(--sign-navy);
-}
-.quiet-please {
-  font-family: var(--font-ui);
-  font-weight: 800;
-  font-size: 19px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--sign-navy);
-  margin: 2px 0 8px;
-}
-/* Mt. Paul wordmark in the badge slot — see finalCardHTML() for why this is
-   NOT the PGA TOUR mark from the reference photo. The source SVG is white, so
-   it needs forcing dark against the cream field regardless of app mode. */
-.quiet-badge {
-  width: 74px;
-  height: auto;
-  display: block;
-  margin-bottom: 4px;
-  filter: brightness(0) saturate(100%);
-}
-
-/* Fine print, pinned to the very bottom of the screen. */
-.final-fineprint {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  text-align: center;
-  font-family: var(--font-ui);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
 
 /* ---- Trends: Last 20 Rounds (2026-07-26) --------------------------------
    Six hero tiles, 3 across x 2 down, over a score-band distribution. Its own

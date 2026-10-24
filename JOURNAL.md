@@ -2274,3 +2274,22 @@ Same block, same grid position. So the second "Onions $2.25" on the current shee
 **Fixed at the source rather than apologised for.** The preview now inlines the actual logo as a base64 data URI, so it is self-contained and shows what the screen really shows. Any future review of this page is against the real masthead.
 
 **The general shape, worth carrying to other projects:** a review artefact that silently substitutes a placeholder for a real asset does not merely look wrong — it produces confidently wrong *decisions*, and they arrive as ordinary feedback with nothing marking them as suspect. A missing image that renders as a broken icon is safer than one that renders as plausible text. Two edits were spent going out and back; neither was Paul's error.
+
+---
+
+## 2026-10-24 — App pared down: hole photos and the credit roll removed
+
+Cloud session, working from GitHub (Studio not mounted). Paul said his Mac may hold newer unpushed work and chose to proceed from the GitHub copy anyway. **If the Mac copy is pushed later, expect it to conflict with this commit in `js/app.js`, `css/styles.css`, `sw.js` and `index.html`.**
+
+**Done (Paul's brief):**
+- All 18 hole photos removed from the hole screens, with their container — the screen closes up, no empty box. Files deleted from `assets/` and from the `sw.js` precache.
+- The 19th Hole credit roll and the QUIET Please card that followed it removed (code, data and CSS). The opening cards (Round Saved, Executive Producer, Mulligan Studios, the three names) still play; the screen then rests blank under the title.
+- Kept: welcome poster photo and Start Round photo (Paul may merge those two screens later), the Mt. Paul logo, the Bar & Grill Menu (Paul still deciding).
+
+**Logos:** the brief said "keep all five logos". In this copy only the Mt. Paul wordmark is displayed; the other four files in `assets/Logos/` (Breaking Par ×2, Sleeman, Brett Emsland headshot) are referenced by nothing. Untouched.
+
+**Staged stats confirmed** against `js/stats.js` before changing anything: Last Round at 1 round, Weekly Trends at 2, Handicap and the deep Analytics at 20.
+
+**Open, awaiting Paul:** whether the opening cards after Save go too; whether the two scorecard-screen photos (after holes 9 and 18) go too.
+
+Pushed to the session branch only, not `main`, so the live site is unchanged until merged.

@@ -171,7 +171,7 @@ then misleads the next session. Known owners:
 | `css/styles.css`, `js/*.js` | App code — see "What's built" above |
 | `manifest.json`, `sw.js`, `icons/` | PWA files |
 | `mt-paul-course-data.json`, `mt-paul-handicap-ratings.json` | Course/tee/handicap data, project root (fetched at runtime) |
-| `assets/` | Hole photos, logo (`assets/Logos/mt_paul_logo_vector.svg`), onboarding/final-score art |
+| `assets/` | Logo (`assets/Logos/mt_paul_logo_vector.svg`), onboarding/Start Round art, the two scorecard-screen photos. The 18 hole photos were removed 2026-10-24 (Paul). |
 | `Design Handoff/` | The original design handoff package (README spec, `.dc.html` design reference, mockup screenshots, source data files) this build was implemented from — kept for reference, not shipped |
 | `wip/` | Gitignored scratch space for in-progress work not yet promoted |
 
