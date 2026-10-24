@@ -60,7 +60,11 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        // Only this app's own old caches. Every app under
+        // kamloopspaul-a11y.github.io shares one origin and so one Cache
+        // Storage; deleting every key that isn't CACHE_NAME also wiped the
+        // Golf Scores app's offline cache on each Bogey update (2026-10-24).
+        keys.filter((key) => key.startsWith('bogey-') && key !== CACHE_NAME).map((key) => caches.delete(key))
       ))
       .then(() => self.clients.claim())
   );
