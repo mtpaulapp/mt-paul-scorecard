@@ -2293,3 +2293,18 @@ Cloud session, working from GitHub (Studio not mounted). Paul said his Mac may h
 **Open, awaiting Paul:** whether the opening cards after Save go too; whether the two scorecard-screen photos (after holes 9 and 18) go too.
 
 Pushed to the session branch only, not `main`, so the live site is unchanged until merged.
+
+### Later the same session — repo moved, changes live
+
+- **Repo transferred** to the new `mtpaulapp` organization (Paul created it). Live URL is now https://mtpaulapp.github.io/mt-paul-scorecard/. Reason: under `kamloopspaul-a11y.github.io` Bogey shared one origin — localStorage and Cache Storage — with the Golf Scores app. **Next session: pick `mtpaulapp/mt-paul-scorecard` in the repo picker.**
+- **Found and fixed:** `sw.js`'s activate handler deleted every cache not named `CACHE_NAME`, which on the shared origin wiped Golf Scores' offline cache on every Bogey update. Now deletes only `bogey-*` keys.
+- **Not checked:** whether Golf Scores uses the same localStorage key names as Bogey (`currentRound`, `rounds-history`, …). Moot for the new address; matters only for any data still on phones under the old one.
+- **All of today's changes merged to `main`** on Paul's "update live". Pages serving confirmed by Paul only for the pre-merge build; the post-merge build not yet seen.
+- Paul is test-driving the live version before deciding next steps.
+
+**Open for next session:**
+1. Opening cards after Save ("Round Saved", Executive Producer, Mulligan Studios, three names) — keep or remove?
+2. Scorecard-screen photos (after holes 9 and 18) — keep or remove?
+3. Paul may merge the welcome poster and Start Round screens into one.
+4. Before Dave gets the link: one install test (notch/home bar, icon launch, airplane mode) and remove Settings' testing card.
+5. Optional, offered: an iPhone-only "Add to Home Screen" tip; a QR code of the link; an update notice.

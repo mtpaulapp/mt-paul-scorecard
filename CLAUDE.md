@@ -111,10 +111,7 @@ Before 2026-07-26 the mid-flight branch dragged the user into a hole screen on e
 
 ## Next session — start here
 
-1. Real-browser/on-device check (dark mode, webfonts, offline behaviour).
-2. Resolve the post-onboarding landing-screen decision (Home vs Settings) — see PROJECT.md.
-3. Commit, push, redeploy GitHub Pages.
-4. Share with Dave.
+The open list is at the end of `JOURNAL.md` (2026-10-24 entry). Repo is now `mtpaulapp/mt-paul-scorecard`; live at https://mtpaulapp.github.io/mt-paul-scorecard/.
 
 ## Key references
 
